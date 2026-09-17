@@ -9,6 +9,7 @@ Resumos claros em português · Memória persistente estilo LLM · 100% local, s
 Por **Joaquim Pedro de Morais Filho**
 
 [Site oficial](https://elevbit-ai.github.io/inpiojus-analitic-legal/) ·
+[🎬 Vídeo de apresentação](https://github.com/elevbit-ai/inpiojus-analitic-legal/releases/download/v1.0.0/InpioJus-Analitic-Legal-Apresentacao.mp4) ·
 [Instalação](#-instalação-no-powershell) ·
 [Como funciona a memória](#-a-memória-da-ia) ·
 [Exemplos](#-exemplos)
