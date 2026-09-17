@@ -61,7 +61,7 @@ function inpiojus {
 if (-not (Test-Path $PROFILE)) {
     New-Item -ItemType File -Path $PROFILE -Force | Out-Null
 }
-$conteudoPerfil = Get-Content $PROFILE -Raw -ErrorAction SilentlyContinue
+$conteudoPerfil = [string](Get-Content $PROFILE -Raw -ErrorAction SilentlyContinue)
 if ($conteudoPerfil -notmatch [regex]::Escape($marcador)) {
     Add-Content -Path $PROFILE -Value $funcao
     Write-Host "  [ok] Comando 'inpiojus' adicionado ao seu perfil do PowerShell." -ForegroundColor Green
