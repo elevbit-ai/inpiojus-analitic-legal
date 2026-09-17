@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InpioJus Analitic Legal — IA jurídica com memória própria</title>
+<meta name="description" content="InpioJus Analitic Legal: inteligência artificial de análise de processos jurídicos com memória persistente estilo LLM. Resumos claros em português, 100% local. Por Joaquim Pedro de Morais Filho.">
+<meta name="author" content="Joaquim Pedro de Morais Filho">
+<meta property="og:title" content="InpioJus Analitic Legal">
+<meta property="og:description" content="IA de análise de processos jurídicos com memória própria. Por Joaquim Pedro de Morais Filho.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>">
+<style>
+  :root {
+    --fundo: #0b1020;
+    --fundo2: #101832;
+    --cartao: #141d3a;
+    --borda: #26325c;
+    --texto: #e8ecf8;
+    --texto2: #9aa7cc;
+    --ouro: #e5b84b;
+    --ouro2: #f5d68a;
+    --azul: #4f7cff;
+    --verde: #46d19a;
+    --term-fundo: #0a0e1c;
+    --mono: "Cascadia Code", "Consolas", "SF Mono", monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--fundo);
+    color: var(--texto);
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    line-height: 1.65;
+  }
+  a { color: var(--ouro); text-decoration: none; }
+  a:hover { color: var(--ouro2); }
+  .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- navegação ---------- */
+  nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(11,16,32,.85); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--borda);
+  }
+  nav .container { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  .logo { font-weight: 700; font-size: 1.05rem; color: var(--texto); display: flex; gap: 8px; align-items: center; }
+  .logo .ouro { color: var(--ouro); }
+  nav ul { display: flex; gap: 22px; list-style: none; font-size: .92rem; }
+  nav ul a { color: var(--texto2); }
+  nav ul a:hover { color: var(--ouro); }
+  @media (max-width: 720px) { nav ul { display: none; } }
+
+  /* ---------- hero ---------- */
+  header {
+    padding: 88px 0 64px;
+    background:
+      radial-gradient(900px 420px at 70% -10%, rgba(79,124,255,.18), transparent),
+      radial-gradient(700px 380px at 15% 10%, rgba(229,184,75,.12), transparent);
+    text-align: center;
+  }
+  .selo {
+    display: inline-block; padding: 5px 16px; border: 1px solid var(--borda);
+    border-radius: 999px; font-size: .8rem; color: var(--texto2);
+    background: rgba(20,29,58,.6); margin-bottom: 22px; letter-spacing: .4px;
+  }
+  h1 {
+    font-size: clamp(2.1rem, 5.5vw, 3.4rem); line-height: 1.15; font-weight: 800;
+    margin-bottom: 6px;
+  }
+  h1 .grad {
+    background: linear-gradient(92deg, var(--ouro) 10%, var(--ouro2) 50%, var(--azul) 95%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .sub {
+    color: var(--texto2); font-size: clamp(1rem, 2.2vw, 1.2rem);
+    max-width: 680px; margin: 16px auto 8px;
+  }
+  .autor-hero { color: var(--ouro); font-size: .95rem; margin-bottom: 34px; }
+  .instalar {
+    display: inline-flex; align-items: center; gap: 12px;
+    background: var(--term-fundo); border: 1px solid var(--borda);
+    border-radius: 12px; padding: 14px 18px; font-family: var(--mono);
+    font-size: .88rem; color: var(--verde); max-width: 100%; overflow-x: auto;
+    box-shadow: 0 12px 40px rgba(0,0,0,.45);
+  }
+  .instalar .ps { color: var(--azul); user-select: none; }
+  .btn-copiar {
+    background: var(--borda); color: var(--texto); border: none; cursor: pointer;
+    border-radius: 8px; padding: 6px 12px; font-size: .78rem; flex-shrink: 0;
+    font-family: inherit;
+  }
+  .btn-copiar:hover { background: var(--azul); }
+  .hero-acoes { margin-top: 26px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-block; padding: 12px 26px; border-radius: 10px; font-weight: 600;
+    font-size: .95rem; transition: transform .15s;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .btn-ouro { background: linear-gradient(92deg, var(--ouro), #d9a83a); color: #1a1405; }
+  .btn-vazado { border: 1px solid var(--borda); color: var(--texto); background: var(--cartao); }
+
+  /* ---------- seções ---------- */
+  section { padding: 72px 0; }
+  section.alt { background: var(--fundo2); }
+  .titulo-secao { text-align: center; margin-bottom: 12px; font-size: clamp(1.5rem, 3.4vw, 2.1rem); font-weight: 750; }
+  .titulo-secao .ouro { color: var(--ouro); }
+  .desc-secao { text-align: center; color: var(--texto2); max-width: 640px; margin: 0 auto 46px; }
+
+  /* ---------- recursos ---------- */
+  .grade { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+  .cartao {
+    background: var(--cartao); border: 1px solid var(--borda); border-radius: 14px;
+    padding: 26px;
+  }
+  .cartao .icone { font-size: 1.7rem; margin-bottom: 12px; display: block; }
+  .cartao h3 { font-size: 1.05rem; margin-bottom: 8px; }
+  .cartao p { color: var(--texto2); font-size: .92rem; }
+
+  /* ---------- memória (diagrama) ---------- */
+  .memoria-fluxo { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; margin-top: 8px; }
+  .camada {
+    background: var(--cartao); border: 1px solid var(--borda); border-radius: 14px;
+    padding: 24px; position: relative;
+  }
+  .camada::before {
+    content: attr(data-passo);
+    position: absolute; top: -14px; left: 20px;
+    background: var(--ouro); color: #1a1405; font-weight: 700; font-size: .75rem;
+    padding: 3px 12px; border-radius: 999px;
+  }
+  .camada h3 { margin: 8px 0 6px; font-size: 1rem; }
+  .camada .llm { color: var(--azul); font-size: .8rem; font-weight: 600; letter-spacing: .3px; }
+  .camada p { color: var(--texto2); font-size: .88rem; margin-top: 8px; }
+
+  /* ---------- player de vídeo (terminal animado) ---------- */
+  .video-wrap { max-width: 860px; margin: 0 auto 54px; }
+  .video-wrap:last-child { margin-bottom: 0; }
+  .video-titulo { font-size: 1.15rem; font-weight: 700; margin-bottom: 4px; }
+  .video-titulo .num { color: var(--ouro); }
+  .video-desc { color: var(--texto2); font-size: .9rem; margin-bottom: 16px; }
+  .player {
+    background: var(--term-fundo); border: 1px solid var(--borda); border-radius: 14px;
+    overflow: hidden; box-shadow: 0 18px 50px rgba(0,0,0,.5);
+  }
+  .player-topo {
+    display: flex; align-items: center; gap: 8px; padding: 11px 16px;
+    background: #0e1428; border-bottom: 1px solid var(--borda);
+  }
+  .bolinha { width: 11px; height: 11px; border-radius: 50%; }
+  .b1 { background: #ff5f57; } .b2 { background: #febc2e; } .b3 { background: #28c840; }
+  .player-topo .rotulo { margin-left: 10px; color: var(--texto2); font-size: .78rem; font-family: var(--mono); }
+  .tela {
+    padding: 18px 20px; font-family: var(--mono); font-size: .82rem;
+    min-height: 300px; max-height: 360px; overflow-y: auto; white-space: pre-wrap;
+    line-height: 1.55;
+  }
+  .tela .cmd { color: #7ee787; }
+  .tela .prompt { color: var(--azul); }
+  .tela .saida { color: #c7d0ea; }
+  .tela .destaque { color: var(--ouro); }
+  .cursor { display: inline-block; width: 8px; height: 15px; background: #7ee787; vertical-align: text-bottom; animation: piscar 1s steps(1) infinite; }
+  @keyframes piscar { 50% { opacity: 0; } }
+  .legenda {
+    padding: 12px 18px; background: #0e1428; border-top: 1px solid var(--borda);
+    color: var(--ouro2); font-size: .88rem; min-height: 44px; font-style: italic;
+  }
+  .controles {
+    display: flex; align-items: center; gap: 14px; padding: 12px 16px;
+    background: #0b1122; border-top: 1px solid var(--borda);
+  }
+  .btn-play {
+    background: var(--ouro); color: #1a1405; border: none; border-radius: 8px;
+    width: 88px; padding: 8px 0; font-weight: 700; cursor: pointer; font-size: .85rem;
+    font-family: inherit;
+  }
+  .btn-play:hover { background: var(--ouro2); }
+  .btn-reiniciar {
+    background: transparent; color: var(--texto2); border: 1px solid var(--borda);
+    border-radius: 8px; padding: 7px 14px; cursor: pointer; font-size: .82rem; font-family: inherit;
+  }
+  .btn-reiniciar:hover { color: var(--texto); border-color: var(--azul); }
+  .progresso { flex: 1; height: 6px; background: var(--borda); border-radius: 999px; overflow: hidden; }
+  .progresso .barra { height: 100%; width: 0%; background: linear-gradient(90deg, var(--ouro), var(--azul)); transition: width .3s; }
+
+  /* ---------- exemplo estático ---------- */
+  .exemplo-caixa {
+    background: var(--term-fundo); border: 1px solid var(--borda); border-radius: 14px;
+    padding: 22px; font-family: var(--mono); font-size: .8rem; overflow-x: auto;
+    white-space: pre; color: #c7d0ea; line-height: 1.5;
+  }
+  .exemplo-caixa .ouro { color: var(--ouro); }
+  .exemplo-caixa .verde { color: #7ee787; }
+  .abas { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; justify-content: center; }
+  .aba {
+    background: var(--cartao); border: 1px solid var(--borda); color: var(--texto2);
+    border-radius: 999px; padding: 8px 20px; cursor: pointer; font-size: .88rem; font-family: inherit;
+  }
+  .aba.ativa { background: var(--ouro); color: #1a1405; font-weight: 700; border-color: var(--ouro); }
+
+  /* ---------- comandos ---------- */
+  table.comandos { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  table.comandos td { padding: 12px 14px; border-bottom: 1px solid var(--borda); vertical-align: top; }
+  table.comandos td:first-child { font-family: var(--mono); color: #7ee787; white-space: nowrap; }
+  table.comandos td:last-child { color: var(--texto2); }
+
+  /* ---------- autor ---------- */
+  .autor-cartao {
+    max-width: 620px; margin: 0 auto; text-align: center;
+    background: var(--cartao); border: 1px solid var(--ouro); border-radius: 18px; padding: 42px 32px;
+  }
+  .autor-cartao .avatar {
+    width: 84px; height: 84px; border-radius: 50%; margin: 0 auto 18px;
+    background: linear-gradient(135deg, var(--ouro), var(--azul));
+    display: flex; align-items: center; justify-content: center; font-size: 2.2rem;
+  }
+  .autor-cartao h3 { font-size: 1.3rem; margin-bottom: 4px; }
+  .autor-cartao .funcao { color: var(--ouro); font-size: .9rem; margin-bottom: 18px; }
+  .autor-cartao .contato { color: var(--texto2); font-size: .92rem; line-height: 2; }
+
+  footer {
+    border-top: 1px solid var(--borda); padding: 34px 0; text-align: center;
+    color: var(--texto2); font-size: .85rem;
+  }
+  .aviso {
+    max-width: 720px; margin: 40px auto 0; padding: 16px 22px; border-radius: 12px;
+    border: 1px solid rgba(229,184,75,.35); background: rgba(229,184,75,.07);
+    color: var(--ouro2); font-size: .85rem; text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <div class="logo">⚖️ <span>InpioJus <span class="ouro">Analitic Legal</span></span></div>
+    <ul>
+      <li><a href="#recursos">Recursos</a></li>
+      <li><a href="#memoria">Memória</a></li>
+      <li><a href="#videos">Vídeos</a></li>
+      <li><a href="#exemplos">Exemplos</a></li>
+      <li><a href="#instalar">Instalar</a></li>
+      <li><a href="#autor">Autor</a></li>
+      <li><a href="https://github.com/elevbit-ai/inpiojus-analitic-legal" target="_blank" rel="noopener">GitHub</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header>
+  <div class="container">
+    <span class="selo">🧠 IA jurídica com memória persistente · 100% local · Código aberto</span>
+    <h1>InpioJus <span class="grad">Analitic Legal</span></h1>
+    <p class="sub">
+      A inteligência artificial que <strong>lê processos jurídicos</strong>, gera
+      <strong>resumos com clareza</strong> em português e <strong>aprende com cada caso</strong>
+      graças a uma memória própria inspirada na arquitetura dos grandes modelos de linguagem.
+    </p>
+    <p class="autor-hero">por Joaquim Pedro de Morais Filho</p>
+    <div class="instalar">
+      <span class="ps">PS&gt;</span>
+      <span id="cmd-instalar">irm https://elevbit-ai.github.io/inpiojus-analitic-legal/install.ps1 | iex</span>
+      <button class="btn-copiar" onclick="copiar()">Copiar</button>
+    </div>
+    <div class="hero-acoes">
+      <a class="btn btn-ouro" href="#videos">▶ Assistir às demonstrações</a>
+      <a class="btn btn-vazado" href="https://github.com/elevbit-ai/inpiojus-analitic-legal" target="_blank" rel="noopener">Ver no GitHub</a>
+    </div>
+  </div>
+</header>
+
+<section id="recursos">
+  <div class="container">
+    <h2 class="titulo-secao">O que a InpioJus <span class="ouro">faz por você</span></h2>
+    <p class="desc-secao">Da petição inicial ao trânsito em julgado: análise estruturada, síntese clara e memória que trabalha a seu favor.</p>
+    <div class="grade">
+      <div class="cartao"><span class="icone">📑</span><h3>Análise estruturada do processo</h3><p>Extrai numeração CNJ, partes e polos, juízo, tribunal, classe da ação, fase processual, fundamentos legais, artigos, súmulas, valores, datas, pedidos, decisões e prazos.</p></div>
+      <div class="cartao"><span class="icone">✍️</span><h3>Resumos com clareza</h3><p>Síntese em parágrafo corrido, em português direto, pronta para o cliente, a banca ou o estudo do caso — além do relatório estruturado completo.</p></div>
+      <div class="cartao"><span class="icone">🧠</span><h3>Memória própria estilo LLM</h3><p>Três camadas — curto prazo, longo prazo e episódica — com embeddings vetoriais, consolidação com decaimento e recuperação por similaridade de cosseno.</p></div>
+      <div class="cartao"><span class="icone">🔎</span><h3>Casos semelhantes automáticos</h3><p>Ao analisar um novo processo, a IA aponta na hora quais casos parecidos ela já viu, com percentual de similaridade — precedentes do seu próprio acervo.</p></div>
+      <div class="cartao"><span class="icone">🔒</span><h3>Sigilo absoluto</h3><p>Tudo roda localmente na sua máquina, em Python puro, sem nenhuma dependência externa. Nenhum dado do processo sai do seu computador. Ideal para o sigilo profissional.</p></div>
+      <div class="cartao"><span class="icone">💻</span><h3>Feita para o PowerShell</h3><p>Instalação em uma linha, comando <code>inpiojus</code> disponível em qualquer terminal, saída em texto ou JSON para integrar aos seus fluxos.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="memoria" class="alt">
+  <div class="container">
+    <h2 class="titulo-secao">Como funciona a <span class="ouro">memória da IA</span></h2>
+    <p class="desc-secao">A InpioJus adapta ao domínio jurídico os mesmos princípios que fazem um LLM "lembrar": contexto, pesos consolidados e atenção sobre o passado.</p>
+    <div class="memoria-fluxo">
+      <div class="camada" data-passo="1 · Percepção">
+        <h3>Embedding do processo</h3>
+        <div class="llm">≈ tokenização + vetor semântico</div>
+        <p>Cada processo é convertido em um vetor de 256 dimensões por <em>feature hashing</em> ponderado por TF-IDF incremental. Textos juridicamente parecidos ficam próximos no espaço vetorial.</p>
+      </div>
+      <div class="camada" data-passo="2 · Curto prazo">
+        <h3>Janela de contexto</h3>
+        <div class="llm">≈ context window do LLM</div>
+        <p>As últimas 12 análises ficam integralmente disponíveis, como o contexto imediato de uma conversa — é o que a IA tem "em mente" agora.</p>
+      </div>
+      <div class="camada" data-passo="3 · Longo prazo">
+        <h3>Consolidação com decaimento</h3>
+        <div class="llm">≈ pesos treinados</div>
+        <p>O vocabulário jurídico e as entidades recorrentes são reforçados a cada leitura e decaem suavemente quando deixam de aparecer — a IA aprende e esquece como um modelo em treinamento contínuo.</p>
+      </div>
+      <div class="camada" data-passo="4 · Recuperação">
+        <h3>Atenção sobre o passado</h3>
+        <div class="llm">≈ mecanismo de atenção</div>
+        <p>A similaridade de cosseno entre embeddings recupera os episódios mais relevantes: "já analisei um caso parecido com este" — automaticamente, a cada nova análise.</p>
+      </div>
+    </div>
+    <div class="aviso">💾 A memória fica em <code>~/.inpiojus/memoria</code>, em JSON legível. Ela é sua: inspecione, copie entre máquinas ou apague quando quiser.</div>
+  </div>
+</section>
+
+<section id="videos">
+  <div class="container">
+    <h2 class="titulo-secao">Vídeos <span class="ouro">explicativos</span></h2>
+    <p class="desc-secao">Demonstrações narradas em português, gravadas do terminal. Aperte o play e acompanhe a legenda.</p>
+
+    <div class="video-wrap">
+      <div class="video-titulo"><span class="num">Vídeo 1 ·</span> Instalando a InpioJus no PowerShell</div>
+      <div class="video-desc">Do zero ao primeiro comando em menos de um minuto.</div>
+      <div class="player" data-video="v1">
+        <div class="player-topo"><span class="bolinha b1"></span><span class="bolinha b2"></span><span class="bolinha b3"></span><span class="rotulo">Windows PowerShell — instalação</span></div>
+        <div class="tela"></div>
+        <div class="legenda">▶ Aperte o play para começar a demonstração.</div>
+        <div class="controles">
+          <button class="btn-play">▶ Play</button>
+          <button class="btn-reiniciar">⟲ Reiniciar</button>
+          <div class="progresso"><div class="barra"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="video-wrap">
+      <div class="video-titulo"><span class="num">Vídeo 2 ·</span> Analisando um processo real</div>
+      <div class="video-desc">A IA lê uma ação de indenização e entrega o resumo estruturado com síntese clara.</div>
+      <div class="player" data-video="v2">
+        <div class="player-topo"><span class="bolinha b1"></span><span class="bolinha b2"></span><span class="bolinha b3"></span><span class="rotulo">Windows PowerShell — análise</span></div>
+        <div class="tela"></div>
+        <div class="legenda">▶ Aperte o play para começar a demonstração.</div>
+        <div class="controles">
+          <button class="btn-play">▶ Play</button>
+          <button class="btn-reiniciar">⟲ Reiniciar</button>
+          <div class="progresso"><div class="barra"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="video-wrap">
+      <div class="video-titulo"><span class="num">Vídeo 3 ·</span> A memória em ação</div>
+      <div class="video-desc">Depois de aprender alguns casos, a IA reconhece sozinha um processo semelhante.</div>
+      <div class="player" data-video="v3">
+        <div class="player-topo"><span class="bolinha b1"></span><span class="bolinha b2"></span><span class="bolinha b3"></span><span class="rotulo">Windows PowerShell — memória</span></div>
+        <div class="tela"></div>
+        <div class="legenda">▶ Aperte o play para começar a demonstração.</div>
+        <div class="controles">
+          <button class="btn-play">▶ Play</button>
+          <button class="btn-reiniciar">⟲ Reiniciar</button>
+          <div class="progresso"><div class="barra"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="exemplos" class="alt">
+  <div class="container">
+    <h2 class="titulo-secao">Exemplos <span class="ouro">reais de saída</span></h2>
+    <p class="desc-secao">Três processos fictícios completos acompanham o repositório. Veja o que a InpioJus produz para cada um.</p>
+    <div class="abas">
+      <button class="aba ativa" onclick="mostrarExemplo('civil', this)">⚖️ Cível (consumidor)</button>
+      <button class="aba" onclick="mostrarExemplo('trab', this)">👷 Trabalhista</button>
+      <button class="aba" onclick="mostrarExemplo('penal', this)">🚨 Penal</button>
+    </div>
+    <div class="exemplo-caixa" id="caixa-exemplo"></div>
+  </div>
+</section>
+
+<section id="comandos">
+  <div class="container">
+    <h2 class="titulo-secao">Todos os <span class="ouro">comandos</span></h2>
+    <p class="desc-secao">Uma CLI enxuta, em português, pensada para o dia a dia forense.</p>
+    <div class="cartao" style="max-width:760px;margin:0 auto;">
+      <table class="comandos">
+        <tr><td>inpiojus analisar processo.txt</td><td>Análise completa: identificação, partes, fundamentos, valores, prazos, síntese e casos semelhantes. A IA aprende com o processo.</td></tr>
+        <tr><td>inpiojus resumo processo.txt</td><td>Resumo enxuto, direto ao ponto.</td></tr>
+        <tr><td>inpiojus similares processo.txt</td><td>Lista os casos mais parecidos já vistos, com percentual de similaridade.</td></tr>
+        <tr><td>inpiojus buscar "dano moral"</td><td>Pesquisa textual na memória episódica.</td></tr>
+        <tr><td>inpiojus memoria</td><td>Estado da memória: processos aprendidos, vocabulário, entidades recorrentes.</td></tr>
+        <tr><td>inpiojus analisar p.txt --json</td><td>Saída estruturada em JSON, para integrar a outros sistemas.</td></tr>
+        <tr><td>inpiojus limpar --confirmar</td><td>Apaga toda a memória (irreversível).</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="instalar" class="alt">
+  <div class="container">
+    <h2 class="titulo-secao">Instale agora no <span class="ouro">PowerShell</span></h2>
+    <p class="desc-secao">Uma linha. Requer apenas Python 3.9 ou superior (sem nenhuma outra dependência).</p>
+    <div style="text-align:center;">
+      <div class="instalar" style="margin-bottom:26px;">
+        <span class="ps">PS&gt;</span>
+        <span>irm https://elevbit-ai.github.io/inpiojus-analitic-legal/install.ps1 | iex</span>
+        <button class="btn-copiar" onclick="copiar()">Copiar</button>
+      </div>
+    </div>
+    <div class="grade" style="max-width:900px;margin:0 auto;">
+      <div class="cartao"><span class="icone">1️⃣</span><h3>Instale</h3><p>Cole o comando acima no PowerShell. O instalador verifica o Python, baixa a InpioJus e cria o comando <code>inpiojus</code> no seu perfil.</p></div>
+      <div class="cartao"><span class="icone">2️⃣</span><h3>Analise</h3><p>Rode <code>inpiojus analisar exemplos\processo_civil_exemplo.txt</code> para ver a IA em ação com um dos processos de exemplo.</p></div>
+      <div class="cartao"><span class="icone">3️⃣</span><h3>Deixe-a aprender</h3><p>Cada análise alimenta a memória. Em poucos dias, <code>inpiojus similares</code> vira o seu localizador de precedentes internos.</p></div>
+    </div>
+    <p style="text-align:center;color:var(--texto2);margin-top:30px;font-size:.9rem;">
+      Prefere manualmente? <code style="color:#7ee787;">git clone https://github.com/elevbit-ai/inpiojus-analitic-legal.git</code>
+      e depois <code style="color:#7ee787;">python -m inpiojus --versao</code> · Funciona também em Linux e macOS.
+    </p>
+  </div>
+</section>
+
+<section id="autor">
+  <div class="container">
+    <h2 class="titulo-secao">Autoria e <span class="ouro">registro</span></h2>
+    <p class="desc-secao">Software registrado e assinado pelo seu autor.</p>
+    <div class="autor-cartao">
+      <div class="avatar">⚖️</div>
+      <h3>Joaquim Pedro de Morais Filho</h3>
+      <div class="funcao">Autor e titular do InpioJus Analitic Legal</div>
+      <div class="contato">
+        📧 <a href="mailto:j360074@hotmail.com">j360074@hotmail.com</a><br>
+        📱 +55 85 99125-3990<br>
+        🔗 <a href="https://github.com/elevbit-ai/inpiojus-analitic-legal" target="_blank" rel="noopener">github.com/elevbit-ai/inpiojus-analitic-legal</a>
+      </div>
+    </div>
+    <div class="aviso">⚠️ A InpioJus é uma ferramenta de apoio à leitura processual. Suas análises não substituem a leitura integral dos autos nem o parecer de um advogado habilitado.</div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p><strong>InpioJus Analitic Legal</strong> · © 2026 Joaquim Pedro de Morais Filho · Licença MIT</p>
+    <p>j360074@hotmail.com · +55 85 99125-3990</p>
+  </div>
+</footer>
+
+<script>
+function copiar() {
+  navigator.clipboard.writeText("irm https://elevbit-ai.github.io/inpiojus-analitic-legal/install.ps1 | iex");
+  document.querySelectorAll(".btn-copiar").forEach(b => { b.textContent = "Copiado!"; });
+  setTimeout(() => document.querySelectorAll(".btn-copiar").forEach(b => { b.textContent = "Copiar"; }), 1600);
+}
+
+/* ================= exemplos (abas) ================= */
+const EXEMPLOS = {
+civil: `<span class="verde">PS&gt; inpiojus analisar exemplos\\processo_civil_exemplo.txt</span>
+
+<span class="ouro">IDENTIFICAÇÃO</span>
+──────────────────────────────────────────────────────────────
+  Processo nº ...: 0012345-67.2024.8.06.0001
+  Classe ........: AÇÃO DE INDENIZAÇÃO POR DANOS MORAIS E MATERIAIS
+  Fase atual ....: sentença
+  Juízo .........: 3ª Vara Cível da Comarca de Fortaleza
+  Tribunal ......: TRIBUNAL DE JUSTIÇA DO ESTADO DO CEARÁ
+
+<span class="ouro">PARTES</span>
+──────────────────────────────────────────────────────────────
+  Polo ativo ....: MARIA DAS GRAÇAS OLIVEIRA SANTOS
+  Polo passivo ..: BANCO HORIZONTE S.A
+
+<span class="ouro">FUNDAMENTOS LEGAIS CITADOS</span>
+──────────────────────────────────────────────────────────────
+  • Código de Defesa do Consumidor      • Súmula 479
+  • Código Civil                        • CPC/2015
+
+<span class="ouro">SÍNTESE</span>
+──────────────────────────────────────────────────────────────
+  Trata-se de ação de indenização por danos morais e materiais
+  movida por MARIA DAS GRAÇAS OLIVEIRA SANTOS em face de BANCO
+  HORIZONTE S.A, autuada sob o nº 0012345-67.2024.8.06.0001.
+  A discussão apoia-se principalmente em Código de Defesa do
+  Consumidor, CDC, Código Civil, Súmula 479. O maior valor
+  mencionado nos autos é R$ 31.900,00. Destaca-se a decisão:
+  "Julgo parcialmente procedentes os pedidos para declarar a
+  inexistência do contrato de empréstimo consignado, condenar
+  o réu à repetição do indébito em dobro, no valor de
+  R$ 16.900,00". O processo encontra-se na fase de sentença.`,
+trab: `<span class="verde">PS&gt; inpiojus resumo exemplos\\processo_trabalhista_exemplo.txt</span>
+
+<span class="ouro">IDENTIFICAÇÃO</span>
+──────────────────────────────────────────────────────────────
+  Processo nº ...: 0001234-55.2024.5.07.0005
+  Classe ........: RECLAMAÇÃO TRABALHISTA
+  Fase atual ....: sentença
+  Juízo .........: 5ª Vara do Trabalho de Fortaleza
+  Tribunal ......: TRIBUNAL REGIONAL DO TRABALHO DA 7ª REGIÃO
+
+<span class="ouro">DECISÕES E COMANDOS JUDICIAIS</span>
+──────────────────────────────────────────────────────────────
+  • Julgo procedentes em parte os pedidos para condenar a
+    reclamada ao pagamento das verbas rescisórias, das horas
+    extras com adicional de 50% e reflexos, da multa do
+    art. 477, § 8º, da CLT
+
+<span class="ouro">SÍNTESE</span>
+──────────────────────────────────────────────────────────────
+  Trata-se de reclamação trabalhista movida por JOSÉ CARLOS
+  FERREIRA LIMA em face de CONSTRUTORA ATLÂNTICO LTDA.
+  A discussão apoia-se principalmente em CLT, Constituição
+  Federal, Súmula 13. O maior valor mencionado nos autos é
+  R$ 48.700,00. O processo encontra-se na fase de sentença.
+  Atenção ao prazo detectado: prazo de 8 (oito) dias.`,
+penal: `<span class="verde">PS&gt; inpiojus analisar exemplos\\processo_penal_exemplo.txt</span>
+
+<span class="ouro">IDENTIFICAÇÃO</span>
+──────────────────────────────────────────────────────────────
+  Processo nº ...: 1500987-32.2024.8.26.0114
+  Classe ........: AÇÃO PENAL
+  Fase atual ....: instrução
+  Juízo .........: 2ª Vara Criminal da Comarca de Campinas
+
+<span class="ouro">PARTES</span>
+──────────────────────────────────────────────────────────────
+  Polo ativo ....: MINISTÉRIO PÚBLICO DO ESTADO DE SÃO PAULO
+  Polo passivo ..: RICARDO ALVES MOREIRA
+
+<span class="ouro">FUNDAMENTOS LEGAIS CITADOS</span>
+──────────────────────────────────────────────────────────────
+  • art. 155, § 4º, inciso II, do Código Penal
+  • art. 396 do Código de Processo Penal
+  • art. 397 do CPP
+
+<span class="ouro">SÍNTESE</span>
+──────────────────────────────────────────────────────────────
+  Trata-se de ação penal movida por MINISTÉRIO PÚBLICO DO
+  ESTADO DE SÃO PAULO em face de RICARDO ALVES MOREIRA.
+  Destaca-se a decisão: "Recebo a denúncia, por presentes os
+  requisitos do art. 41 do CPP". O processo encontra-se na
+  fase de instrução. Atenção ao prazo detectado: prazo de
+  10 (dez) dias.
+
+<span class="ouro">MEMÓRIA DA IA — CASOS SEMELHANTES JÁ ANALISADOS</span>
+──────────────────────────────────────────────────────────────
+  • [17% similar] AÇÃO DE INDENIZAÇÃO ... x BANCO HORIZONTE S.A`,
+};
+function mostrarExemplo(qual, botao) {
+  document.getElementById("caixa-exemplo").innerHTML = EXEMPLOS[qual];
+  document.querySelectorAll(".aba").forEach(a => a.classList.remove("ativa"));
+  botao.classList.add("ativa");
+}
+document.getElementById("caixa-exemplo").innerHTML = EXEMPLOS.civil;
+
+/* ================= "vídeos": terminais animados ================= */
+// Cada passo: [tipo, texto, legenda]  tipo: cmd (digitado) | out (impresso) | pausa
+const ROTEIROS = {
+v1: [
+  ["leg", "", "Vamos instalar a InpioJus. Abra o PowerShell e cole o comando de instalação."],
+  ["cmd", "irm https://elevbit-ai.github.io/inpiojus-analitic-legal/install.ps1 | iex", "O comando baixa e executa o instalador oficial direto do site."],
+  ["out", "\n  ╔══════════════════════════════════════════════╗\n  ║   InpioJus Analitic Legal — Instalador       ║\n  ║   por Joaquim Pedro de Morais Filho          ║\n  ╚══════════════════════════════════════════════╝\n", "O instalador se identifica e começa a trabalhar."],
+  ["out", "  [ok] Python 3.12.4 encontrado.\n  [..] Baixando a InpioJus do GitHub...\n  [ok] Instalada em C:\\Users\\voce\\AppData\\Local\\InpioJus\n  [ok] Comando 'inpiojus' adicionado ao seu perfil do PowerShell.\n", "Ele verifica o Python, baixa a versão mais recente e cria o comando 'inpiojus'."],
+  ["out", "  Instalacao concluida! Experimente agora:\n    inpiojus --versao\n", "Pronto! A instalação leva segundos."],
+  ["cmd", "inpiojus --versao", "Vamos confirmar que está tudo funcionando..."],
+  ["out", "InpioJus Analitic Legal v1.0.0\n", "Instalada e pronta para analisar o primeiro processo. 🎉"]
+],
+v2: [
+  ["leg", "", "Agora vamos pedir à IA que analise uma ação de indenização contra um banco."],
+  ["cmd", "inpiojus analisar exemplos\\processo_civil_exemplo.txt", "Um único comando: 'inpiojus analisar' seguido do arquivo do processo."],
+  ["out", "\n╔════════════════════════════════════════════════════════════╗\n║  InpioJus Analitic Legal — Resumo Inteligente do Processo  ║\n╚════════════════════════════════════════════════════════════╝\n", "Em menos de um segundo, a IA leu os autos inteiros."],
+  ["out", "IDENTIFICAÇÃO\n──────────────────────────────────────────────\n  Processo nº ...: 0012345-67.2024.8.06.0001\n  Classe ........: AÇÃO DE INDENIZAÇÃO POR DANOS MORAIS E MATERIAIS\n  Fase atual ....: sentença\n  Juízo .........: 3ª Vara Cível da Comarca de Fortaleza\n", "Ela identifica sozinha o número CNJ, a classe da ação e até a fase processual."],
+  ["out", "PARTES\n──────────────────────────────────────────────\n  Polo ativo ....: MARIA DAS GRAÇAS OLIVEIRA SANTOS\n  Polo passivo ..: BANCO HORIZONTE S.A\n\nVALORES ENVOLVIDOS\n──────────────────────────────────────────────\n  • R$ 31.900,00 (valor da causa)   • R$ 16.900,00   • R$ 8.000,00\n", "Partes, polos e todos os valores dos autos, organizados."],
+  ["out", "SÍNTESE\n──────────────────────────────────────────────\n  Trata-se de ação de indenização por danos morais e materiais\n  movida por MARIA DAS GRAÇAS OLIVEIRA SANTOS em face de BANCO\n  HORIZONTE S.A. Destaca-se a decisão: \"Julgo parcialmente\n  procedentes os pedidos...\". O processo encontra-se na fase\n  de sentença.\n", "E o melhor: uma síntese em linguagem clara, pronta para enviar ao cliente."],
+  ["out", "  Memória: 1 processo aprendido · 139 termos no vocabulário jurídico.\n", "Enquanto analisava, a IA também aprendeu — o caso agora faz parte da memória dela."]
+],
+v3: [
+  ["leg", "", "A InpioJus já analisou alguns processos. Vamos ver o que ela aprendeu."],
+  ["cmd", "inpiojus memoria", "O comando 'memoria' mostra o estado do cérebro da IA."],
+  ["out", "\n  Processos aprendidos ..: 3\n  Episódios retidos .....: 3\n  Vocabulário jurídico ..: 285 termos\n\n  Termos com maior peso na memória de longo prazo:\n    justica, processo, vara, tribunal, prazo, art...\n", "Três processos lidos e 285 termos jurídicos já consolidados na memória de longo prazo."],
+  ["cmd", "inpiojus similares novo_caso_bancario.txt", "Agora chega um caso novo, também contra um banco. Será que ela reconhece?"],
+  ["out", "\n[InpioJus] 3 caso(s) semelhante(s) na memória:\n\n   87%  AÇÃO DE INDENIZAÇÃO POR DANOS MORAIS E MATERIAIS\n        nº 0012345-67.2024.8.06.0001 — MARIA DAS GRAÇAS x BANCO\n        HORIZONTE S.A — fase: sentença\n\n   13%  AÇÃO PENAL nº 1500987-32.2024.8.26.0114\n   11%  RECLAMAÇÃO TRABALHISTA nº 0001234-55.2024.5.07.0005\n", "87% de similaridade! A IA encontrou sozinha o precedente do próprio acervo."],
+  ["cmd", "inpiojus buscar \"danos morais\"", "Também dá para pesquisar a memória por qualquer termo..."],
+  ["out", "\n[InpioJus] 1 resultado(s) para \"danos morais\":\n  • AÇÃO DE INDENIZAÇÃO POR DANOS MORAIS E MATERIAIS\n    nº 0012345-67.2024.8.06.0001 — analisado em 2026-09-17\n", "...como um assistente que nunca esquece um caso. Essa é a memória da InpioJus. ⚖️"]
+]
+};
+
+class PlayerTerminal {
+  constructor(raiz, roteiro) {
+    this.raiz = raiz;
+    this.roteiro = roteiro;
+    this.tela = raiz.querySelector(".tela");
+    this.legenda = raiz.querySelector(".legenda");
+    this.barra = raiz.querySelector(".barra");
+    this.btnPlay = raiz.querySelector(".btn-play");
+    this.btnRei = raiz.querySelector(".btn-reiniciar");
+    this.tocando = false; this.passo = 0; this.cancelar = false;
+    this.btnPlay.addEventListener("click", () => this.alternar());
+    this.btnRei.addEventListener("click", () => this.reiniciar());
+  }
+  espera(ms) {
+    return new Promise(res => {
+      const inicio = performance.now();
+      const tique = () => {
+        if (this.cancelar) return res();
+        if (!this.tocando) { requestAnimationFrame(tique); return; }
+        if (performance.now() - inicio >= ms) res(); else requestAnimationFrame(tique);
+      };
+      tique();
+    });
+  }
+  esc(t) { const d = document.createElement("div"); d.textContent = t; return d.innerHTML; }
+  async digitar(texto) {
+    const span = document.createElement("span"); span.className = "cmd";
+    const prompt = document.createElement("span"); prompt.className = "prompt"; prompt.textContent = "PS> ";
+    this.tela.appendChild(prompt); this.tela.appendChild(span);
+    const cursor = document.createElement("span"); cursor.className = "cursor"; this.tela.appendChild(cursor);
+    for (const ch of texto) {
+      if (this.cancelar) break;
+      span.textContent += ch;
+      this.tela.scrollTop = this.tela.scrollHeight;
+      await this.espera(22 + Math.random() * 40);
+    }
+    cursor.remove();
+    this.tela.appendChild(document.createTextNode("\n"));
+  }
+  async imprimir(texto) {
+    const linhas = texto.split("\n");
+    for (const l of linhas) {
+      if (this.cancelar) break;
+      const span = document.createElement("span");
+      span.className = /═|╔|╚|║|──/.test(l) ? "destaque" : "saida";
+      span.textContent = l + "\n";
+      this.tela.appendChild(span);
+      this.tela.scrollTop = this.tela.scrollHeight;
+      await this.espera(90);
+    }
+  }
+  async rodar() {
+    for (; this.passo < this.roteiro.length; ) {
+      if (this.cancelar) return;
+      const [tipo, texto, leg] = this.roteiro[this.passo];
+      if (leg) this.legenda.textContent = "🎙️ " + leg;
+      if (tipo === "cmd") { await this.espera(500); await this.digitar(texto); await this.espera(350); }
+      else if (tipo === "out") { await this.imprimir(texto); await this.espera(1400); }
+      else { await this.espera(2200); }
+      this.passo++;
+      this.barra.style.width = (this.passo / this.roteiro.length * 100) + "%";
+    }
+    if (!this.cancelar) {
+      this.tocando = false;
+      this.btnPlay.textContent = "▶ Rever";
+      this.legenda.textContent = "✅ Fim da demonstração. Aperte ⟲ para assistir de novo.";
+      this.passo = 0; this.terminado = true;
+    }
+  }
+  alternar() {
+    if (this.terminado) { this.reiniciar(); return; }
+    this.tocando = !this.tocando;
+    this.btnPlay.textContent = this.tocando ? "❚❚ Pausar" : "▶ Play";
+    if (this.tocando && !this.emExecucao) { this.emExecucao = true; this.rodar().then(() => this.emExecucao = false); }
+  }
+  async reiniciar() {
+    this.cancelar = true; this.tocando = false;
+    await new Promise(r => setTimeout(r, 80));
+    this.cancelar = false; this.terminado = false; this.passo = 0; this.emExecucao = false;
+    this.tela.innerHTML = ""; this.barra.style.width = "0%";
+    this.legenda.textContent = "▶ Aperte o play para começar a demonstração.";
+    this.btnPlay.textContent = "▶ Play";
+  }
+}
+document.querySelectorAll(".player").forEach(p => new PlayerTerminal(p, ROTEIROS[p.dataset.video]));
+</script>
+</body>
+</html>

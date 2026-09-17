@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "inpiojus-analitic-legal"
+version = "1.0.0"
+description = "IA de análise de processos jurídicos com memória persistente própria (arquitetura inspirada em LLM). Resumos claros em português, 100% local."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [
+  { name = "Joaquim Pedro de Morais Filho", email = "j360074@hotmail.com" },
+]
+keywords = ["juridico", "direito", "ia", "nlp", "processos", "resumo", "memoria", "legal"]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Environment :: Console",
+  "Intended Audience :: Legal Industry",
+  "License :: OSI Approved :: MIT License",
+  "Natural Language :: Portuguese (Brazilian)",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Topic :: Text Processing :: Linguistic",
+]
+
+[project.urls]
+Homepage = "https://elevbit-ai.github.io/inpiojus-analitic-legal/"
+Repository = "https://github.com/elevbit-ai/inpiojus-analitic-legal"
+
+[project.scripts]
+inpiojus = "inpiojus.cli:main"
+
+[tool.setuptools]
+packages = ["inpiojus"]
